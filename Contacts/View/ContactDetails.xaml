@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Contacts.Models"
+             BackgroundColor="BlanchedAlmond"
+             x:Class="Contacts.View.ContactDetails"
+             x:Name="thisContactDetails"
+             Title="Contact details">
+    <ContentPage.Content>
+        <Grid RowDefinitions="*, auto" BackgroundColor="BlanchedAlmond">
+            <ScrollView Grid.Row="0">
+                <StackLayout BindingContext="{
+                    Binding BindingContext.Contact,
+                    Source={x:Reference thisContactDetails}}"
+                    x:DataType="models:Contact"
+                    Margin="10">
+                    <Label Text="Name"/>
+                    <Frame BorderColor="Gray">
+                        <Label Text="{Binding Name}"/>
+                    </Frame>
+                    <Label Text="Last name (Father)"/>
+                    <Frame BorderColor="Gray">
+                        <Label Text="{Binding FLastName}"/>
+                    </Frame>
+                    <Label Text="Last name (Mother)"/>
+                    <Frame BorderColor="Gray">
+                        <Label Text="{Binding MLastName}"/>
+                    </Frame>
+                    <Label Text="Organization"/>
+                    <Frame BorderColor="Gray">
+                        <Label Text="{Binding Organization}"/>
+                    </Frame>
+                    <Label Text="Phone number(s)"/>
+                    <Frame BorderColor="Gray">
+                        <CollectionView ItemsSource="{Binding PhonesNumbers}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:PhoneNumber">
+                                    <StackLayout>
+                                        <Label Text="Number"/>
+                                        <Frame BorderColor="Gray">
+                                            <Label Text="{Binding Number}"/>
+                                        </Frame>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
+                </StackLayout>
+            </ScrollView>
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:Contacts.Models"
+             xmlns:vm="clr-namespace:Contacts.ViewModel"
+             x:Class="Contacts.View.Contact"
+             x:Name="thisContact"
+             Title="Conctacts"
+             BackgroundColor="BlanchedAlmond"
+             >
+    <ContentPage.BindingContext>
+        <vm:ContactViewModel/>
+    </ContentPage.BindingContext>
+        <ContentPage.Content>
+        <Grid RowDefinitions="*" BackgroundColor="BlanchedAlmond">
+            <ScrollView Grid.Row="0" Margin="10">
+                <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand">
+                    <CollectionView ItemsSource="{Binding BindingContext.Contacts, Source={x:Reference thisContact}}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:Contact">
+                                <Grid RowDefinitions="auto,auto,auto,auto" ColumnDefinitions="*">
+                                    <Label Grid.Row="0">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Name}" FontAttributes="Bold"/>
+                                                <Span Text=" "/>
+                                                <Span Text="{Binding FLastName}"/>
+                                                <Span Text=" "/>
+                                                <Span Text="{Binding MLastName}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="1" Text="{Binding Organization}" FontSize="Micro" TextColor="RosyBrown"/>
+                                    <BoxView Grid.Row="2" BackgroundColor="Brown" HeightRequest="1"/>
+                                    <StackLayout Grid.Row="0" Grid.RowSpan="3">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.cmdContactDetails, Source={x:Reference thisContact}}"
+                                                CommandParameter="{Binding .}"/>
+                                        </StackLayout.GestureRecognizers>
+                                    </StackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </ScrollView>
+            <Button Text="+" 
+                FontSize="20"
+                FontAttributes="Bold"
+                BackgroundColor="Brown"
+                BorderRadius="100"
+                TextColor="White"
+                HorizontalOptions="EndAndExpand"
+                WidthRequest="50"
+                HeightRequest="50"
+                Margin="0,0,20,22"
+                VerticalOptions="EndAndExpand"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
