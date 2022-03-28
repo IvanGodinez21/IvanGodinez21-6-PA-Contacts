@@ -2,33 +2,33 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:Contacts.Models"
-             x:Class="Contacts.View.ContactDetails"
-             x:Name="thisContactDetails"
-             Title="Contact details"
+             x:Class="Contacts.View.ContactMaintenance"
+             x:Name="thisContactMaintenance"
+             Title="Contact maintenance"
              BackgroundColor="BlanchedAlmond">
     <ContentPage.Content>
         <Grid RowDefinitions="*, auto" BackgroundColor="BlanchedAlmond">
             <ScrollView Grid.Row="0">
                 <StackLayout BindingContext="{
                     Binding BindingContext.Contact,
-                    Source={x:Reference thisContactDetails}}"
+                    Source={x:Reference thisContactMaintenance}}"
                     x:DataType="models:Contact"
                     Margin="10">
                     <Label Text="Name"/>
                     <Frame BorderColor="Gray">
-                        <Label Text="{Binding Name}"/>
+                        <Entry Text="{Binding Name}"/>
                     </Frame>
                     <Label Text="Last name (Father)"/>
                     <Frame BorderColor="Gray">
-                        <Label Text="{Binding FLastName}"/>
+                        <Entry Text="{Binding FLastName}"/>
                     </Frame>
                     <Label Text="Last name (Mother)"/>
                     <Frame BorderColor="Gray">
-                        <Label Text="{Binding MLastName}"/>
+                        <Entry Text="{Binding MLastName}"/>
                     </Frame>
                     <Label Text="Organization"/>
                     <Frame BorderColor="Gray">
-                        <Label Text="{Binding Organization}"/>
+                        <Entry Text="{Binding Organization}"/>
                     </Frame>
                     <Label Text="Phone number(s)"/>
                     <Frame BorderColor="Gray">
@@ -38,7 +38,7 @@
                                     <StackLayout>
                                         <Label Text="Number"/>
                                         <Frame BorderColor="Gray">
-                                            <Label Text="{Binding Number}"/>
+                                            <Entry Text="{Binding Number}"/>
                                         </Frame>
                                     </StackLayout>
                                 </DataTemplate>
@@ -48,12 +48,11 @@
                 </StackLayout>
             </ScrollView>
             <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center">
-                <Button Command="{Binding BindingContext.cmdContactDetailsDelete, Source={x:Reference thisContactDetails}}"
-                        CommandParameter="{Binding BindingContext.Contact, Source={x:Reference thisContactDetails}}"
-                        Text="Delete" HorizontalOptions="Center" BackgroundColor="PaleVioletRed"/>
-                <Button Command="{Binding BindingContext.cmdContactDetailsModify, Source={x:Reference thisContactDetails}}"
-                        CommandParameter="{Binding BindingContext.Contact, Source={x:Reference thisContactDetails}}"
-                        Text="Modify" HorizontalOptions="Center" BackgroundColor="CornflowerBlue"/>
+                <Button Command="{Binding BindingContext.cmdContactDetailsCancel, Source={x:Reference thisContactMaintenance}}"
+                        Text="Cancel" HorizontalOptions="Center" BackgroundColor="PaleVioletRed"/>
+                <Button Command="{Binding BindingContext.cmdContactDetailsSaveEdit, Source={x:Reference thisContactMaintenance}}"
+                        CommandParameter="{Binding BindingContext.Contact, Source={x:Reference thisContactMaintenance}}"
+                        Text="Save" HorizontalOptions="Center" BackgroundColor="CornflowerBlue"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>

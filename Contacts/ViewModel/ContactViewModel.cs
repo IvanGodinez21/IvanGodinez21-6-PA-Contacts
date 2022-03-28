@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -22,6 +23,9 @@ namespace Contacts.ViewModel
         }
         public ICommand cmdContactDetails { get; set; }
         public ICommand cmdContactDetailsDelete { get; set; }
+        public ICommand cmdContactDetailsModify { get; set; }
+        public ICommand cmdContactDetailsCancel { get; set; }
+        public ICommand cmdContactDetailsSaveEdit { get; set; }
         public ContactViewModel()
         {
             Contacts = new ObservableCollection<Contact>();
@@ -50,6 +54,9 @@ namespace Contacts.ViewModel
             });
             cmdContactDetails = new Command<Contact>(async (details) => await PcmdContactDetails(details));
             cmdContactDetailsDelete = new Command<Contact>(async (details) => await PcmdContactDetailsDelete(details));
+            cmdContactDetailsModify = new Command<Contact>(async (details) => await PcmdContactDetailsModify(details));
+            cmdContactDetailsCancel = new Command(async () => await PcmdContactDetailsCancel());
+            cmdContactDetailsSaveEdit = new Command<Contact>(async (details) => await PcmdContactDetailsSaveEdit(details));
 
             async Task PcmdContactDetails(Models.Contact _Contact)
             {
@@ -64,6 +71,35 @@ namespace Contacts.ViewModel
                     OnPropertyChanged();
                     await Application.Current.MainPage.Navigation.PopAsync();
                 }
+            }
+            async Task PcmdContactDetailsModify(Models.Contact _Contact)
+            {
+                await Application.Current.MainPage.Navigation.PushAsync(new View.ContactMaintenance(Contact, this));
+            }
+            async Task PcmdContactDetailsCancel()
+            {
+                await Application.Current.MainPage.Navigation.PopAsync();
+            }
+            async Task PcmdContactDetailsSaveEdit(Models.Contact _Contact)
+            {
+                int index = -1;
+                Contact tmp = Contacts.FirstOrDefault(item => item.Id == _Contact.Id);
+                //foreach(Contact contact in Contacts)
+                //{
+                //    if (contact.Id == _Contact.Id)
+                //    {
+                //        index++;
+                //    }
+                //}
+                if (tmp != null)
+                {
+                    index = Contacts.IndexOf(tmp);
+                    Contacts[index] = _Contact;
+
+                }
+                OnPropertyChanged();
+                await Application.Current.MainPage.Navigation.PopAsync();
+                await Application.Current.MainPage.Navigation.PopAsync();
             }
         }
     }
