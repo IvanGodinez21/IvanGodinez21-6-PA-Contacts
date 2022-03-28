@@ -47,7 +47,12 @@
                     </Frame>
                 </StackLayout>
             </ScrollView>
-            
+            <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center">
+                <Button Command="{Binding BindingContext.cmdContactDetailsDelete, Source={x:Reference thisContactDetails}}"
+                        CommandParameter="{Binding BindingContext.Contact, Source={x:Reference thisContactDetails}}"
+                        Text="Delete" HorizontalOptions="Center" BackgroundColor="PaleVioletRed"/>
+                <Button Text="Modify" HorizontalOptions="Center" BackgroundColor="CornflowerBlue"/>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

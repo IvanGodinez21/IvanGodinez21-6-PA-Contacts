@@ -21,6 +21,7 @@ namespace Contacts.ViewModel
             set { contact = value; OnPropertyChanged(); }
         }
         public ICommand cmdContactDetails { get; set; }
+        public ICommand cmdContactDetailsDelete { get; set; }
         public ContactViewModel()
         {
             Contacts = new ObservableCollection<Contact>();
@@ -48,10 +49,21 @@ namespace Contacts.ViewModel
                 }
             });
             cmdContactDetails = new Command<Contact>(async (details) => await PcmdContactDetails(details));
+            cmdContactDetailsDelete = new Command<Contact>(async (details) => await PcmdContactDetailsDelete(details));
 
             async Task PcmdContactDetails(Models.Contact _Contact)
             {
                 await Application.Current.MainPage.Navigation.PushAsync(new View.ContactDetails(_Contact, this));
+            }
+            async Task PcmdContactDetailsDelete(Models.Contact _Contact)
+            {
+                int index = Contacts.IndexOf(_Contact);
+                if (index >= 0)
+                {
+                    Contacts.Remove(_Contact);
+                    OnPropertyChanged();
+                    await Application.Current.MainPage.Navigation.PopAsync();
+                }
             }
         }
     }
