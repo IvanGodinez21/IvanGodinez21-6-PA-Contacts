@@ -26,6 +26,9 @@ namespace Contacts.ViewModel
         public ICommand cmdContactDetailsModify { get; set; }
         public ICommand cmdContactDetailsCancel { get; set; }
         public ICommand cmdContactDetailsSaveEdit { get; set; }
+        public ICommand cmdContactDetailsAdd { get; set; }
+        public ICommand cmdContactDetailsAddPhoneNumber { get; set; }
+        public ICommand cmdContactDetailsDeletePhoneNumber { get; set; }
         public ContactViewModel()
         {
             Contacts = new ObservableCollection<Contact>();
@@ -57,6 +60,9 @@ namespace Contacts.ViewModel
             cmdContactDetailsModify = new Command<Contact>(async (details) => await PcmdContactDetailsModify(details));
             cmdContactDetailsCancel = new Command(async () => await PcmdContactDetailsCancel());
             cmdContactDetailsSaveEdit = new Command<Contact>(async (details) => await PcmdContactDetailsSaveEdit(details));
+            cmdContactDetailsAdd = new Command(async () => await PcmdContactDetailsAdd());
+            cmdContactDetailsAddPhoneNumber = new Command(async () => await PcmdContactDetailsAddPhoneNumber());
+            cmdContactDetailsDeletePhoneNumber = new Command<PhoneNumber>(async (details) => await PcmdContactDetailsDeletePhoneNumber(details));
 
             async Task PcmdContactDetails(Models.Contact _Contact)
             {
@@ -97,9 +103,29 @@ namespace Contacts.ViewModel
                     Contacts[index] = _Contact;
 
                 }
+                else
+                {
+                    Contacts.Add(_Contact);
+                }
                 OnPropertyChanged();
                 await Application.Current.MainPage.Navigation.PopAsync();
                 await Application.Current.MainPage.Navigation.PopAsync();
+            }
+            async Task PcmdContactDetailsAdd()
+            {
+                await Application.Current.MainPage.Navigation.PushAsync(new View.ContactMaintenance(this));
+            }
+            async Task PcmdContactDetailsAddPhoneNumber()
+            {
+                if (Contact.PhonesNumbers == null)
+                    Contact.PhonesNumbers = new ObservableCollection<PhoneNumber>();
+                    Contact.PhonesNumbers.Add(new PhoneNumber { Id = Guid.NewGuid().ToString() });
+                await Task.Delay(1000);
+            }
+            async Task PcmdContactDetailsDeletePhoneNumber(Models.PhoneNumber _PhoneNumber)
+            {
+                Contact.PhonesNumbers?.Remove(_PhoneNumber);
+                await Task.Delay(1000);
             }
         }
     }

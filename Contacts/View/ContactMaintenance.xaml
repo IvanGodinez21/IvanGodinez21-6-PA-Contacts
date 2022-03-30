@@ -30,7 +30,22 @@
                     <Frame BorderColor="Gray">
                         <Entry Text="{Binding Organization}"/>
                     </Frame>
-                    <Label Text="Phone number(s)"/>
+                    <Grid ColumnDefinitions="auto,auto">
+                        <Button Text="➕" 
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        BackgroundColor="White"
+                        BorderColor="Brown"
+                        BorderWidth="2"
+                        BorderRadius="20"
+                        TextColor="White"
+                        HorizontalOptions="CenterAndExpand"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        VerticalOptions="CenterAndExpand"
+                        Command="{Binding BindingContext.cmdContactDetailsAddPhoneNumber, Source={x:Reference thisContactMaintenance}}"/>
+                        <Label Grid.Column="1" Text="Phone number(s)" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Grid>
                     <Frame BorderColor="Gray">
                         <CollectionView ItemsSource="{Binding PhonesNumbers}">
                             <CollectionView.ItemTemplate>
@@ -38,7 +53,15 @@
                                     <StackLayout>
                                         <Label Text="Number"/>
                                         <Frame BorderColor="Gray">
-                                            <Entry Text="{Binding Number}"/>
+                                            <Grid ColumnDefinitions="*,auto">
+                                                <Entry Grid.Column="0" Text="{Binding Number}" HorizontalOptions="FillAndExpand"/>
+                                                <Label Grid.Column="1" Text="❌" TextColor="White" FontAttributes="Bold" HorizontalOptions="EndAndExpand" VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding BindingContext.cmdContactDetailsDeletePhoneNumber, Source= {x:Reference thisContactMaintenance}}"
+                                                                              CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </Grid>
                                         </Frame>
                                     </StackLayout>
                                 </DataTemplate>

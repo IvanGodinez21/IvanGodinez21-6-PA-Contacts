@@ -44,17 +44,20 @@
                     </CollectionView>
                 </StackLayout>
             </ScrollView>
-            <Button Text="+" 
+            <Button Text="➕" 
                 FontSize="20"
                 FontAttributes="Bold"
-                BackgroundColor="Brown"
+                BackgroundColor="White"
+                BorderColor="Brown"
+                BorderWidth="2"
                 BorderRadius="100"
-                TextColor="White"
+                TextColor="Black"
                 HorizontalOptions="EndAndExpand"
                 WidthRequest="50"
                 HeightRequest="50"
                 Margin="0,0,20,22"
-                VerticalOptions="EndAndExpand"/>
+                VerticalOptions="EndAndExpand"
+                Command="{Binding BindingContext.cmdContactDetailsAdd, Source={x:Reference thisContact}}"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
