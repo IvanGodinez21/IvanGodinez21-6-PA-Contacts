@@ -13,7 +13,8 @@ namespace Contacts.ViewModel
     public class ContactViewModel : BaseViewModel
     {
         #region Propiedades
-        public ObservableCollection<Contact> Contacts { get; set; }
+        public ObservableCollection<Contact> ContactsCollection { get; set; }
+        public ObservableCollection<Contact> ContactsFavoriteCollection { get; set; }
         #endregion
         private Contact contact;
         public Contact Contact
@@ -26,13 +27,15 @@ namespace Contacts.ViewModel
         public ICommand cmdContactDetailsModify { get; set; }
         public ICommand cmdContactDetailsCancel { get; set; }
         public ICommand cmdContactDetailsSaveEdit { get; set; }
-        public ICommand cmdContactDetailsAdd { get; set; }
+        public ICommand cmdContactAdd { get; set; }
         public ICommand cmdContactDetailsAddPhoneNumber { get; set; }
         public ICommand cmdContactDetailsDeletePhoneNumber { get; set; }
+        public ICommand cmdContactDetailsFavoriteToogle { get; set; }
+        public ICommand cmdContactFavoriteList { get; set; }
         public ContactViewModel()
         {
-            Contacts = new ObservableCollection<Contact>();
-            Contacts.Add(new Contact()
+            ContactsCollection = new ObservableCollection<Contact>();
+            ContactsCollection.Add(new Contact()
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Jesús Iván",
@@ -41,10 +44,11 @@ namespace Contacts.ViewModel
                 Organization = "@Universidad-de-Colima",
                 PhonesNumbers = new ObservableCollection<PhoneNumber>() {
                     new PhoneNumber{ Id = Guid.NewGuid().ToString(), Number = "3121205900" },
-                    new PhoneNumber{ Id = Guid.NewGuid().ToString(), Number = "3123308456"}
-                }
-            });
-            Contacts.Add(new Contact()
+                    new PhoneNumber{ Id = Guid.NewGuid().ToString(), Number = "3123308456" }
+                },
+                Favorite = true
+            }); ;
+            ContactsCollection.Add(new Contact()
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Cristian Alejandro",
@@ -53,16 +57,19 @@ namespace Contacts.ViewModel
                 Organization = "@Universidad-de-Colima",
                 PhonesNumbers = new ObservableCollection<PhoneNumber>() {
                     new PhoneNumber{ Id = Guid.NewGuid().ToString(), Number = "3121001234" }
-                }
+                },
+                Favorite = false
             });
             cmdContactDetails = new Command<Contact>(async (details) => await PcmdContactDetails(details));
             cmdContactDetailsDelete = new Command<Contact>(async (details) => await PcmdContactDetailsDelete(details));
             cmdContactDetailsModify = new Command<Contact>(async (details) => await PcmdContactDetailsModify(details));
             cmdContactDetailsCancel = new Command(async () => await PcmdContactDetailsCancel());
             cmdContactDetailsSaveEdit = new Command<Contact>(async (details) => await PcmdContactDetailsSaveEdit(details));
-            cmdContactDetailsAdd = new Command(async () => await PcmdContactDetailsAdd());
+            cmdContactAdd = new Command(async () => await PcmdContactAdd());
             cmdContactDetailsAddPhoneNumber = new Command(async () => await PcmdContactDetailsAddPhoneNumber());
             cmdContactDetailsDeletePhoneNumber = new Command<PhoneNumber>(async (details) => await PcmdContactDetailsDeletePhoneNumber(details));
+            cmdContactDetailsFavoriteToogle = new Command(async () => await PcmdContactDetailsFavoriteToogle());
+            cmdContactFavoriteList = new Command(async () => await PcmdContactFavoriteList());
 
             async Task PcmdContactDetails(Models.Contact _Contact)
             {
@@ -70,10 +77,11 @@ namespace Contacts.ViewModel
             }
             async Task PcmdContactDetailsDelete(Models.Contact _Contact)
             {
-                int index = Contacts.IndexOf(_Contact);
+                int index = ContactsCollection.IndexOf(_Contact);
                 if (index >= 0)
                 {
-                    Contacts.Remove(_Contact);
+                    ContactsCollection.Remove(_Contact);
+                    ContactsFavoriteCollection.Remove(_Contact);
                     OnPropertyChanged();
                     await Application.Current.MainPage.Navigation.PopAsync();
                 }
@@ -89,29 +97,21 @@ namespace Contacts.ViewModel
             async Task PcmdContactDetailsSaveEdit(Models.Contact _Contact)
             {
                 int index = -1;
-                Contact tmp = Contacts.FirstOrDefault(item => item.Id == _Contact.Id);
-                //foreach(Contact contact in Contacts)
-                //{
-                //    if (contact.Id == _Contact.Id)
-                //    {
-                //        index++;
-                //    }
-                //}
+                Contact tmp = ContactsCollection.FirstOrDefault(item => item.Id == _Contact.Id);
                 if (tmp != null)
                 {
-                    index = Contacts.IndexOf(tmp);
-                    Contacts[index] = _Contact;
-
+                    index = ContactsCollection.IndexOf(tmp);
+                    ContactsCollection[index] = _Contact;
                 }
                 else
                 {
-                    Contacts.Add(_Contact);
+                    ContactsCollection.Add(_Contact);
                 }
                 OnPropertyChanged();
                 await Application.Current.MainPage.Navigation.PopAsync();
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
-            async Task PcmdContactDetailsAdd()
+            async Task PcmdContactAdd()
             {
                 await Application.Current.MainPage.Navigation.PushAsync(new View.ContactMaintenance(this));
             }
@@ -120,12 +120,26 @@ namespace Contacts.ViewModel
                 if (Contact.PhonesNumbers == null)
                     Contact.PhonesNumbers = new ObservableCollection<PhoneNumber>();
                     Contact.PhonesNumbers.Add(new PhoneNumber { Id = Guid.NewGuid().ToString() });
+                OnPropertyChanged();
                 await Task.Delay(1000);
             }
             async Task PcmdContactDetailsDeletePhoneNumber(Models.PhoneNumber _PhoneNumber)
             {
                 Contact.PhonesNumbers?.Remove(_PhoneNumber);
+                OnPropertyChanged();
                 await Task.Delay(1000);
+            }
+            async Task PcmdContactDetailsFavoriteToogle()
+            {
+                Contact.Favorite = Contact.Favorite ? false : true;
+                OnPropertyChanged();
+                await Application.Current.MainPage.Navigation.PopAsync();
+            }
+            async Task PcmdContactFavoriteList()
+            {
+                ContactsFavoriteCollection = new ObservableCollection<Contact>(ContactsCollection.Where((Contact) => Contact.Favorite.Equals(true)));
+                OnPropertyChanged();
+                await Application.Current.MainPage.Navigation.PushAsync(new View.ContactFavorite(this));
             }
         }
     }

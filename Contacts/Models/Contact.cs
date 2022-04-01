@@ -13,6 +13,7 @@ namespace Contacts.Models
         public string MLastName { get; set; }
         public string Organization { get; set; }
         public ObservableCollection<PhoneNumber> PhonesNumbers { get; set; }
+        public bool Favorite { get; set; }
     }
 
     public class PhoneNumber

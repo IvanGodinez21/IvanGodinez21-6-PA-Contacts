@@ -14,7 +14,7 @@
                     Source={x:Reference thisContactDetails}}"
                     x:DataType="models:Contact"
                     Margin="10">
-                    <Label Text="Name"/>
+                    <Label Text="Favorite" IsVisible="{Binding Favorite}" TextColor="Gold"/>
                     <Frame BorderColor="Gray">
                         <Label Text="{Binding Name}"/>
                     </Frame>
@@ -54,6 +54,9 @@
                 <Button Command="{Binding BindingContext.cmdContactDetailsModify, Source={x:Reference thisContactDetails}}"
                         CommandParameter="{Binding BindingContext.Contact, Source={x:Reference thisContactDetails}}"
                         Text="Modify" HorizontalOptions="Center" BackgroundColor="CornflowerBlue"/>
+                <Button x:Name="btnFavorite" Command="{Binding BindingContext.cmdContactDetailsFavoriteToogle, Source={x:Reference thisContactDetails}}"
+                        CommandParameter="{Binding BindingContext.Contact, Source={x:Reference thisContactDetails}}"
+                        Text="Toggle Favorite" HorizontalOptions="Center" BackgroundColor="Gold"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>

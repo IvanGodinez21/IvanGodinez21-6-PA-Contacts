@@ -16,9 +16,20 @@ namespace Contacts.View
         public ContactDetails(Models.Contact contact, ContactViewModel vm)
         {
             InitializeComponent();
-            vm.Contact = new Models.Contact();
             vm.Contact = contact;
             this.BindingContext = vm;
+            if (contact.Favorite)
+            {
+                btnFavorite.BackgroundColor = Color.Gray;
+                btnFavorite.Text = "Unfavorite";
+                OnPropertyChanged();
+            } 
+            else
+            {
+                btnFavorite.BackgroundColor = Color.Gold;
+                btnFavorite.Text = "Favorite";
+                OnPropertyChanged();
+            }
         }
     }
 }
