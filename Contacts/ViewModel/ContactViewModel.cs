@@ -60,6 +60,7 @@ namespace Contacts.ViewModel
                 },
                 Favorite = false
             });
+            ContactsFavoriteCollection = new ObservableCollection<Contact>(ContactsCollection.Where((Contact) => Contact.Favorite.Equals(true)));
             cmdContactDetails = new Command<Contact>(async (details) => await PcmdContactDetails(details));
             cmdContactDetailsDelete = new Command<Contact>(async (details) => await PcmdContactDetailsDelete(details));
             cmdContactDetailsModify = new Command<Contact>(async (details) => await PcmdContactDetailsModify(details));
@@ -68,7 +69,7 @@ namespace Contacts.ViewModel
             cmdContactAdd = new Command(async () => await PcmdContactAdd());
             cmdContactDetailsAddPhoneNumber = new Command(async () => await PcmdContactDetailsAddPhoneNumber());
             cmdContactDetailsDeletePhoneNumber = new Command<PhoneNumber>(async (details) => await PcmdContactDetailsDeletePhoneNumber(details));
-            cmdContactDetailsFavoriteToogle = new Command(async () => await PcmdContactDetailsFavoriteToogle());
+            cmdContactDetailsFavoriteToogle = new Command<Contact>(async (details) => await PcmdContactDetailsFavoriteToogle(details));
             cmdContactFavoriteList = new Command(async () => await PcmdContactFavoriteList());
 
             async Task PcmdContactDetails(Models.Contact _Contact)
@@ -129,15 +130,23 @@ namespace Contacts.ViewModel
                 OnPropertyChanged();
                 await Task.Delay(1000);
             }
-            async Task PcmdContactDetailsFavoriteToogle()
+            async Task PcmdContactDetailsFavoriteToogle(Models.Contact _Contact)
             {
+                if (!Contact.Favorite)
+                {
+                    ContactsFavoriteCollection.Add(_Contact);
+                }
+                else
+                {
+                    ContactsFavoriteCollection.Remove(_Contact);
+                }
                 Contact.Favorite = Contact.Favorite ? false : true;
                 OnPropertyChanged();
-                await Application.Current.MainPage.Navigation.PopAsync();
+                await PcmdContactDetailsSaveEdit(Contact);
             }
             async Task PcmdContactFavoriteList()
             {
-                ContactsFavoriteCollection = new ObservableCollection<Contact>(ContactsCollection.Where((Contact) => Contact.Favorite.Equals(true)));
+                //ContactsFavoriteCollection = new ObservableCollection<Contact>(ContactsCollection.Where((Contact) => Contact.Favorite.Equals(true)));
                 OnPropertyChanged();
                 await Application.Current.MainPage.Navigation.PushAsync(new View.ContactFavorite(this));
             }

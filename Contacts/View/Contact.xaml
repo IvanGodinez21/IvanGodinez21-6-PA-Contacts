@@ -11,33 +11,82 @@
     <ContentPage.BindingContext>
         <vm:ContactViewModel/>
     </ContentPage.BindingContext>
-        <ContentPage.Content>
-        <Grid RowDefinitions="*" BackgroundColor="BlanchedAlmond">
-            <ScrollView Grid.Row="0" Margin="10">
-                <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand">
+    <ContentPage.Content>
+        <Grid BackgroundColor="BlanchedAlmond" RowDefinitions="80,*">
+            <StackLayout Grid.Row="0"  VerticalOptions="Start" Orientation="Horizontal" Margin="3">
+                <CollectionView ItemsSource="{Binding BindingContext.ContactsFavoriteCollection, Source={x:Reference thisContact}}" >
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Contact">
+                            <Grid RowDefinitions="auto, auto, auto" ColumnDefinitions="150">
+                                <Label Grid.Row="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Name}" FontAttributes="Bold" />
+                                            <Span Text=" " />
+                                            <Span Text="{Binding FLastName}"/>
+                                            <Span Text=" " />
+                                            <Span Text="{Binding MLastName}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Grid.Row="1" Text="{Binding Organization}" FontSize="Micro" TextColor="Gray" />
+                                <StackLayout Grid.Row="0" Grid.RowSpan="3">
+                                    <StackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.cmdContactDetails, Source={x:Reference thisContact}}"
+                                                              CommandParameter="{Binding .}"/>
+                                    </StackLayout.GestureRecognizers>
+                                </StackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+            <ScrollView Grid.Row="1" BackgroundColor="White" Margin="3">
+                <StackLayout Grid.Row="1" VerticalOptions="FillAndExpand" BackgroundColor="AliceBlue">
+                    <BoxView Grid.Row="2" BackgroundColor="Brown" HeightRequest="1"/>
                     <CollectionView ItemsSource="{Binding BindingContext.ContactsCollection, Source={x:Reference thisContact}}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:Contact">
-                                <Grid RowDefinitions="auto,auto,auto,auto" ColumnDefinitions="*">
+                                <Grid RowDefinitions="auto, auto, auto" ColumnDefinitions="*">
                                     <Label Grid.Row="0">
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding Name}" FontAttributes="Bold"/>
-                                                <Span Text=" "/>
+                                                <Span Text="{Binding Name}" FontAttributes="Bold" />
+                                                <Span Text=" " />
                                                 <Span Text="{Binding FLastName}"/>
-                                                <Span Text=" "/>
+                                                <Span Text=" " />
                                                 <Span Text="{Binding MLastName}"/>
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                    <Label Grid.Row="1" Text="{Binding Organization}" FontSize="Micro" TextColor="RosyBrown"/>
-                                    <Label IsVisible="{Binding Favorite}" Grid.Row="2" Text="Favorite" FontSize="Micro" TextColor="Gold"/>
-                                    <BoxView Grid.Row="3" BackgroundColor="Brown" HeightRequest="1"/>
+                                    <Label Grid.Row="1" Text="{Binding Organization}" FontSize="Micro" TextColor="Gray" />
+                                    <BoxView Grid.Row="2" BackgroundColor="Brown" HeightRequest="1"/>
                                     <StackLayout Grid.Row="0" Grid.RowSpan="3">
                                         <StackLayout.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding BindingContext.cmdContactDetails, Source={x:Reference thisContact}}"
-                                                CommandParameter="{Binding .}"/>
+                                                                  CommandParameter="{Binding .}"/>
                                         </StackLayout.GestureRecognizers>
+                                    </StackLayout>
+                                    <StackLayout Grid.Row="1">
+                                        <Button 
+                                            Text="⭐"
+                                            FontAttributes="Bold"
+                                            BackgroundColor="White"
+                                            BorderColor="Brown"
+                                            BorderWidth="2"
+                                            BorderRadius="100"
+                                            TextColor="Black"
+                                            FontSize="15"
+                                            HorizontalOptions="End"
+                                            WidthRequest="40"
+                                            HeightRequest="40"
+                                            Margin="-10,-15,1,-2"
+                                            VerticalOptions="End"
+                                            Command="{Binding BindingContext.cmdContactDetailsFavoriteToogle, Source={x:Reference thisContact}}"
+                                            CommandParameter="{Binding .}"/>
                                     </StackLayout>
                                 </Grid>
                             </DataTemplate>
@@ -45,7 +94,8 @@
                     </CollectionView>
                 </StackLayout>
             </ScrollView>
-            <Button Text="➕" 
+            <Button Grid.Row="1"
+                Text="➕" 
                 FontSize="20"
                 FontAttributes="Bold"
                 BackgroundColor="White"
@@ -59,7 +109,8 @@
                 Margin="0,0,20,22"
                 VerticalOptions="EndAndExpand"
                 Command="{Binding BindingContext.cmdContactAdd, Source={x:Reference thisContact}}"/>
-            <Button Text="⭐" 
+            <Button Grid.Row="1"
+                Text="⭐" 
                 FontSize="20"
                 FontAttributes="Bold"
                 BackgroundColor="White"
