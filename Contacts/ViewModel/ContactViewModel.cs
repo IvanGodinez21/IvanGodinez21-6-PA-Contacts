@@ -1,4 +1,4 @@
-﻿using Contacts.Models;
+using Contacts.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -132,7 +132,7 @@ namespace Contacts.ViewModel
             }
             async Task PcmdContactDetailsFavoriteToogle(Models.Contact _Contact)
             {
-                if (!Contact.Favorite)
+                if (!_Contact.Favorite)
                 {
                     ContactsFavoriteCollection.Add(_Contact);
                 }
@@ -140,9 +140,9 @@ namespace Contacts.ViewModel
                 {
                     ContactsFavoriteCollection.Remove(_Contact);
                 }
-                Contact.Favorite = Contact.Favorite ? false : true;
+                _Contact.Favorite = _Contact.Favorite ? false : true;
                 OnPropertyChanged();
-                await PcmdContactDetailsSaveEdit(Contact);
+                await PcmdContactDetailsSaveEdit(_Contact);
             }
             async Task PcmdContactFavoriteList()
             {
